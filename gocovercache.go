@@ -65,7 +65,6 @@ func calcCheckSum(dirpath string) string {
 
 func runTest(pkg, checksum string) {
 	name := strings.Replace(pkg, "/", ".", -1)
-
 	filefmt := `%s.profile.%s`
 	filename := fmt.Sprintf(filefmt, name, checksum)
 	path := fmt.Sprintf("%s/%s", outDir, filename)
@@ -113,7 +112,7 @@ func getPackageList() []string {
 }
 
 func removeOldReport(pkg, checksum string) {
-	name := strings.Replace(pkg, "/", ".", -1)
+	name := strings.Replace(pkg, "/", ".", -1) + ".profile."
 	err := filepath.Walk(outDir,
 		func(path string, info os.FileInfo, err error) error {
 			if info.IsDir() {

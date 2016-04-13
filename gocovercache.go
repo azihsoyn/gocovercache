@@ -144,7 +144,7 @@ func getAbsolutePackageDir(pkg string) string {
 	return fmt.Sprintf("%s/src/%s", strings.Split(pwd, "/src")[0], pkg)
 }
 
-func uniteReports() {
+func uniteReports(pkgs []string) {
 	f, err := os.Create(coverprofile)
 	if err != nil {
 		fmt.Printf("create %s failed. %s", coverprofile, err)
@@ -163,6 +163,19 @@ func uniteReports() {
 			if info.IsDir() {
 				return nil
 			}
+			// check exists pkg
+			exists := false
+			for _, pkg := range pkgs {
+				name := strings.Replace(pkg, "/", ".", -1) + ".profile."
+				if strings.Contains(path, name) {
+					exists = true
+					break
+				}
+			}
+			if !exists {
+				return nil
+			}
+
 			f, err := os.Open(path)
 			if err != nil {
 				fmt.Printf("file %s could not read: %v\n", path, err)
@@ -216,5 +229,5 @@ func main() {
 	}
 	wg.Wait()
 
-	uniteReports()
+	uniteReports(pkgs)
 }

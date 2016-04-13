@@ -204,6 +204,10 @@ func main() {
 			defer wg.Done()
 			semaphore <- 1
 			pkgDir := getAbsolutePackageDir(pkg)
+			// resolve symbolic link
+			if originPath, err := os.Readlink(pkgDir); err == nil {
+				pkgDir = originPath
+			}
 			checksum := calcCheckSum(pkgDir)
 			runTest(pkg, checksum)
 			removeOldReport(pkg, checksum)
